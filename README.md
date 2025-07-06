@@ -1,5 +1,17 @@
 # 🔐 Hệ thống Gửi Ảnh Bảo Mật Gắn Watermark
 
+<p align="center">
+  <img src="images/logoDaiNam.png" alt="DaiNam University Logo" width="200"/>
+  <img src="images/LogoFit.png" alt="AIoTLab Logo" width="170"/>
+</p>
+
+<div align="center">
+
+[![Faculty of Information Technology](https://img.shields.io/badge/Faculty%20of%20Information%20Technology-blue?style=for-the-badge)](https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin)
+[![DaiNam University](https://img.shields.io/badge/DaiNam%20University-orange?style=for-the-badge)](https://dainam.edu.vn)
+
+</div>
+
 ## 📌 Giới thiệu
 Dự án này xây dựng một hệ thống **web bảo mật** bằng Python & Flask, cho phép **gửi ảnh gắn watermark** với các cơ chế bảo vệ hiện đại:
 - Ảnh được **mã hóa bằng DES** (khóa phiên sinh ngẫu nhiên hoặc nhập tay).
