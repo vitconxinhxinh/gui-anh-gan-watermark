@@ -117,6 +117,8 @@ Hệ thống gồm các giao diện chính:
 ### 2. **Giao diện đăng ký / đăng nhập**
 - Người dùng có thể đăng ký tài khoản mới hoặc đăng nhập vào hệ thống.
 - Kiểm tra tên đăng nhập trùng lặp, báo lỗi khi sai mật khẩu.
+
+
 **Đăng ký:**
 
 <img src="images/dangky.png" alt="Giao diện đăng ký" width="800"/>
