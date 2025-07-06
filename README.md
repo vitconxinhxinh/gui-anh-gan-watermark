@@ -132,7 +132,7 @@ Hệ thống gồm các giao diện chính:
 - Gửi yêu cầu kết nối tới người nhận, chờ xác nhận.
    <img src="images/handshake.png" alt="" width="800"/>
 - Người nhận duyệt hoặc từ chối handshake.
-   <img src="images/handskake1.png" alt="" width="800"/>
+   <img src="images/handshake1.png" alt="" width="800"/>
 
 ### 5. **Giao diện gửi packet mã hóa**
 - Nhập Private Key của mình để ký số, Public Key của người nhận để mã hóa khóa DES (nếu cần), mã DES, watermark.
