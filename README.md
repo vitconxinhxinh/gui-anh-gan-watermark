@@ -105,6 +105,53 @@ python app.py
 
 Trình duyệt sẽ tự mở trang: [http://127.0.0.1:5000]
 
+
+## 🎨 Giao diện hệ thống
+
+Hệ thống gồm các giao diện chính:
+### 1. **Giao diện khi chưa đăng nhập**
+- Hiển thị giới thiệu qua trang web và hướng tới chức năng đăng ký, đăng nhập.
+
+   <img src="images/giaodien.png" alt="" width="800"/>
+
+### 2. **Giao diện đăng ký / đăng nhập**
+- Người dùng có thể đăng ký tài khoản mới hoặc đăng nhập vào hệ thống.
+- Kiểm tra tên đăng nhập trùng lặp, báo lỗi khi sai mật khẩu.
+- Đăng ký
+   <img src="images/dangky.png" alt="" width="800"/>
+- Đăng nhập   
+   <img src="images/dangnhap.png" alt="" width="800"/>
+
+
+### 3. **Trang chủ (Dashboard)**
+- Hiển thị danh sách người dùng có thể chat/gửi file, các thông báo, trạng thái yêu cầu kết nối.
+- Truy cập nhanh tới các tính năng: gửi file bảo mật, tạo/cập nhật khóa, đăng xuất.
+  <img src="trangchu.png" width="800"/>
+
+### 4. **Giao diện bắt tay (Handshake)**
+- Gửi yêu cầu kết nối tới người nhận, chờ xác nhận.
+   <img src="images/handshake.png" alt="" width="800"/>
+- Người nhận duyệt hoặc từ chối handshake.
+   <img src="images/handskake1.png" alt="" width="800"/>
+
+### 5. **Giao diện gửi packet mã hóa**
+- Nhập Private Key của mình để ký số, Public Key của người nhận để mã hóa khóa DES (nếu cần), mã DES, watermark.
+   <img src="images/sendpacket.png" alt="" width="800"/>
+- Có nút tải ảnh đã watermark, nút tải file packet.
+   <img src="images/sendpacket1.png" alt="" width="800"/>
+
+### 5. **Giao diện chat**
+- Nhắn tin hai chiều, trao đổi khóa Public Key ở đây, packet mã hóa sẽ được gửi về đây
+- Có nút tải file các tin nhắn được gửi đi nếu là ảnh hoặc packet.
+   <img src="images/chat.png" alt="" width="800"/>
+
+### 6. **Giao diện giải mã và kiểm tra toàn vẹn**
+- Upload private key hoặc nhập DES key để giải mã.
+   <img src="images/giaimax.png" alt="" width="800"/>
+- Kiểm tra các bước: hạn dùng, hash toàn vẹn, session key, chữ ký số, loại file.
+- Hiển thị rõ trạng thái từng bước (thành công/thất bại), cho phép tải về file giải mã.
+   <img src="images/giaima1.png" alt="" width="800"/>
+
 ## 🔧 Đề xuất nâng cấp
 
 - 📱 Thêm xác thực đa yếu tố (2FA, OTP)
