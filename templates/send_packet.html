@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Gửi file bảo mật cho {{ other.username }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card-custom">
+            <div class="card-body">
+                <h2 class="section-title text-center mb-4">
+                    <i class="bi bi-file-earmark-lock me-2"></i> Gửi file bảo mật cho {{ other.username }}
+                </h2>
+                
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="photo" class="form-label fw-bold">
+                            <i class="bi bi-image me-2"></i> Chọn ảnh
+                        </label>
+                        <input type="file" name="photo" id="photo" accept=".jpg,.jpeg,.png" required 
+                               class="form-control">
+                        <small class="text-muted mt-1 d-block">
+                            Chỉ hỗ trợ file ảnh định dạng JPG, JPEG hoặc PNG.
+                        </small>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="watermark" class="form-label fw-bold">
+                            <i class="bi bi-water me-2"></i> Watermark (tuỳ chọn)
+                        </label>
+                        <input type="text" name="watermark" id="watermark" placeholder="Protected" 
+                               class="form-control">
+                        <small class="text-muted mt-1 d-block">
+                            Văn bản sẽ được chèn vào giữa ảnh như một watermark.
+                        </small>
+                    </div>
+                    
+                    <!-- Thêm sau phần nhập DES key -->
+                    <div class="mb-4">
+                        <label for="sender_private_key" class="form-label fw-bold">
+                            <i class="bi bi-key me-2"></i> Private key của bạn (để ký số)
+                        </label>
+                        <input type="file" name="sender_private_key" id="sender_private_key" accept=".pem" 
+                            class="form-control" required>
+                        <small class="text-muted mt-1 d-block">
+                            Upload file private key (.pem) của bạn để ký số packet.
+                        </small>
+                    </div>
+                    <div class="mb-4">
+                        <label for="public_key" class="form-label fw-bold">
+                            <i class="bi bi-key me-2"></i> Public key của người nhận
+                        </label>
+                        <input type="file" name="public_key" id="public_key" accept=".pem" 
+                               class="form-control">
+                        <small class="text-muted mt-1 d-block">
+                            <b>Lưu ý:</b> Nếu bạn <b>không nhập mã bảo vệ (DES key)</b> thì <b>bắt buộc</b> phải upload public key của người nhận.
+                        </small>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="des_key" class="form-label fw-bold">
+                            <i class="bi bi-lock me-2"></i> Mã bảo vệ (DES key)
+                        </label>
+                        <input type="text" name="des_key" id="des_key" maxlength="8" 
+                               class="form-control" placeholder="Nhập DES key nếu muốn dùng key tay">
+                        <small class="text-muted mt-1 d-block">
+                            Nếu bỏ trống sẽ dùng random key, khi đó phải upload public key của người nhận.
+                        </small>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-send-fill me-2"></i> Gửi packet bảo mật
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-2"></i> Hủy bỏ
+                        </a>  
+                    </div>
+                </form>
+                
+                {% if watermark_file or packet_file %}
+                <hr class="my-4">
+                <div class="row">
+                    {% if watermark_file %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title text-primary">
+                                    <i class="bi bi-image me-2"></i> Ảnh đã watermark
+                                </h6>
+                                <a href="{{ url_for('download_watermark', filename=watermark_file) }}" 
+                                    class="btn btn-outline-primary mt-2" download>
+                                    <i class="bi bi-download me-2"></i> Tải về
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    
+                    {% if packet_file %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title text-success">
+                                    <i class="bi bi-file-earmark-zip me-2"></i> File packet
+                                </h6>
+                                <a href="{{ url_for('download_file', filename=packet_file) }}" 
+                                    class="btn btn-outline-success mt-2" download>
+                                    <i class="bi bi-download me-2"></i> Tải về
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="text-center mt-4">
+                    <div class="d-flex flex-column align-items-center">
+                        <a href="{{ url_for('chat', user_id=other.id) }}" class="btn btn-primary px-4 mb-2">
+                            <i class="bi bi-chat me-2"></i> Xem trong chat
+                        </a>
+                        <small class="text-muted">
+                            Tin nhắn đã được gửi đến cuộc trò chuyện với {{ other.username }}
+                        </small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

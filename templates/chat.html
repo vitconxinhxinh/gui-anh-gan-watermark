@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block title %}Chat với {{ other.username }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        height: 500px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) var(--secondary);
+    }
+    
+    .chat-container::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .chat-container::-webkit-scrollbar-track {
+        background: var(--secondary);
+        border-radius: 10px;
+    }
+    
+    .chat-container::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 10px;
+    }
+    
+    .file-preview {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 8px;
+    }
+    
+    .file-icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title mb-0">
+                <i class="bi bi-chat-left-text me-2"></i> Chat với {{ other.username }}
+            </h2>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i> Quay lại
+            </a>
+        </div>
+        
+        <div class="card-custom mb-4">
+            <div class="card-body p-0">
+                <div class="chat-container p-4">
+                    {% for m in messages %}
+                    <div class="d-flex mb-3 {% if m.sender_id == current_user.id %}justify-content-end{% else %}justify-content-start{% endif %}">
+                        <div class="message-bubble {% if m.sender_id == current_user.id %}sent{% else %}received{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="fw-bold">{% if m.sender_id == current_user.id %}Bạn{% else %}{{ other.username }}{% endif %}</small>
+                                <small class="opacity-75 ms-2">{{ m.created_at.strftime('%H:%M %d/%m') }}</small>
+                            </div>
+                            
+                            {% if m.text %}
+                            <div class="mb-2">{{ m.text }}</div>
+                            {% endif %}
+                            
+                            {% if m.file_name %}
+                            <div class="mt-2">
+                                <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                                    <a href="{{ url_for('download_file', filename=m.file_name) }}" 
+                                       class="btn btn-sm {% if m.is_key %}btn-info{% elif m.is_packet %}btn-warning{% else %}btn-outline-primary{% endif %}" 
+                                       download="{{ m.file_display_name if m.file_display_name else m.file_name }}">
+                                        <i class="bi {% if m.is_key %}bi-key{% elif m.is_packet %}bi-file-earmark-zip{% else %}bi-download{% endif %} me-1"></i>
+                                        {% if m.is_key %}Tải Key{% elif m.is_packet %}Tải Packet{% else %}Tải file{% endif %}
+                                    </a>
+                                    <small class="text-truncate" style="max-width: 200px;">
+                                        <i class="bi 
+                                            {% if m.file_name.lower().endswith('.png') or m.file_name.lower().endswith('.jpg') or m.file_name.lower().endswith('.jpeg') %}bi-image
+                                            {% elif m.file_name.lower().endswith('.pem') %}bi-key
+                                            {% elif m.file_name.lower().endswith('.json') or m.is_packet %}bi-file-earmark-text
+                                            {% else %}bi-file-earmark{% endif %} file-icon"></i>
+                                        {{ m.file_display_name if m.file_display_name else m.file_name }}
+                                    </small>
+                                </div>
+                                
+                                <!-- Thêm preview ảnh -->
+                                {% if m.file_name.lower().endswith(('.png', '.jpg', '.jpeg')) and not m.is_packet %}
+                                <div class="mt-2">
+                                    <img src="{{ url_for('uploaded_file', filename=m.file_name) }}" 
+                                        class="img-thumbnail file-preview" 
+                                        alt="Preview">
+                                </div>
+                                {% endif %}
+                                
+                                {% if m.is_packet %}
+                                <div class="mt-2">
+                                    <a href="{{ url_for('decrypt_packet', msg_id=m.id) }}"
+                                       class="btn btn-sm btn-success">
+                                        <i class="bi bi-unlock me-1"></i> Giải mã file bảo mật
+                                    </a>
+                                    <small class="d-block text-muted mt-1">
+                                        <i class="bi bi-info-circle"></i> Đây là file đã được mã hóa, cần giải mã để xem nội dung
+                                    </small>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            {% if m.is_ack %}
+                            <div class="alert alert-success p-2 mb-0 mt-2 d-flex align-items-center gap-2">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>{{ m.text }}</span>
+                            </div>
+                            {% elif m.is_nack %}
+                            <div class="alert alert-danger p-2 mb-0 mt-2 d-flex align-items-center gap-2">
+                                <i class="bi bi-exclamation-circle-fill"></i>
+                                <span>{{ m.text }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-custom">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <textarea name="text" class="form-control mb-2" placeholder="Nhập tin nhắn..." rows="3" style="resize: none;"></textarea>
+                        <div class="d-flex gap-2">
+                            <div class="flex-grow-1">
+                                <div class="input-group">
+                                    <label class="input-group-text bg-primary text-white">
+                                        <i class="bi bi-paperclip"></i>
+                                    </label>
+                                    <input type="file" name="file" id="fileInput" class="form-control" accept=".png,.jpg,.jpeg,.pem,.json">
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small class="text-muted">File tối đa 10MB (PNG, JPG, PEM, JSON)</small>
+                                    <small id="fileInfo" class="text-muted"></small>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary px-4" type="submit">
+                                <i class="bi bi-send-fill"></i> Gửi
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Tự động cuộn xuống tin nhắn mới nhất
+    document.addEventListener('DOMContentLoaded', function() {
+        scrollToBottom();
+    });
+
+    function scrollToBottom() {
+        const container = document.querySelector('.chat-container');
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // Hiển thị thông tin file khi chọn
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const fileInfo = document.getElementById('fileInfo');
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            fileInfo.textContent = `${file.name} (${formatFileSize(file.size)})`;
+            
+            // Kiểm tra loại file
+            const validTypes = ['.png', '.jpg', '.jpeg', '.pem', '.json'];
+            const fileExt = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+            
+            if (!validTypes.includes(fileExt)) {
+                alert('Chỉ chấp nhận file ảnh (PNG/JPG) hoặc file key (PEM/JSON)');
+                this.value = '';
+                fileInfo.textContent = '';
+            }
+        } else {
+            fileInfo.textContent = '';
+        }
+    });
+
+    // Định dạng kích thước file
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat(bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
+    }
+</script>
+{% endblock %}

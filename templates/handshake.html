@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Kết nối với {{ other.username }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card-custom">
+            <div class="card-body text-center py-5">
+                {% if status == 'pending' %}
+                <div class="mb-4">
+                    <i class="bi bi-hourglass text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h3 class="mb-3">Đang chờ {{ other.username }} xác nhận...</h3>
+                <div class="spinner-border text-primary mb-4" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted">Hệ thống sẽ tự động làm mới trang</p>
+                <meta http-equiv="refresh" content="3">
+                {% elif status == 'accepted' %}
+                <div class="mb-4">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                </div>
+                <h3 class="mb-3">{{ other.username }} đã sẵn sàng!</h3>
+                <a href="{{ url_for('send_packet', user_id=other.id) }}" class="btn btn-primary px-4">
+                    <i class="bi bi-file-earmark-lock me-2"></i> Tiếp tục gửi file
+                </a>
+                {% else %}
+                <div class="mb-4">
+                    <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <h3 class="mb-3">{{ other.username }} đã từ chối kết nối</h3>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i> Quay lại
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
