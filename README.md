@@ -118,9 +118,9 @@ Hệ thống gồm các giao diện chính:
 - Người dùng có thể đăng ký tài khoản mới hoặc đăng nhập vào hệ thống.
 - Kiểm tra tên đăng nhập trùng lặp, báo lỗi khi sai mật khẩu.
 - Đăng ký:
-   <img src="images/dangky.png" alt="" width="800"/>
+  <img src="images/dangky.png" alt="" width="800"/>
 - Đăng nhập:
-   <img src="images/dangnhap.png" alt="" width="800"/>
+  <img src="images/dangnhap.png" alt="" width="800"/>
 
 
 ### 3. **Trang chủ (Dashboard)**
