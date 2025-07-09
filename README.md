@@ -131,7 +131,7 @@ Hệ thống gồm các giao diện chính:
 ### 3. **Trang chủ (Dashboard)**
 - Hiển thị danh sách người dùng có thể chat/gửi file, các thông báo, trạng thái yêu cầu kết nối.
 - Truy cập nhanh tới các tính năng: gửi file bảo mật, tạo/cập nhật khóa, đăng xuất.
-  <img src="trangchu.png" width="800"/>
+  <img src="images/trangchu.png" width="800"/>
 
 ### 4. **Giao diện bắt tay (Handshake)**
 - Gửi yêu cầu kết nối tới người nhận, chờ xác nhận.
